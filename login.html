@@ -1,67 +1,41 @@
-{% include "header.html" %}
+{% from "bootstrap5/form.html" import render_form %} {% block content %} {%
+include "header.html" %}
 
-<!-- Page Header-->
-<header class="masthead" style="background-image: url('{{post.url_image}}')">
+<!-- Page Header -->
+<header
+  class="masthead"
+  style="background-image: url('../static/assets/imgages/login-bg.jpg')"
+>
   <div class="container position-relative px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
-        <div class="post-heading">
-          <h1>{{ post.title }}</h1>
-          <h2 class="subheading">{{ post.subtitle }}</h2>
-          <span class="meta"
-            >Posted by
-            <a href="#">{{ post.author.name }}</a> <!-- post.author.name becouse author is a object -->
-            on {{ post.date }}
-          </span>
+        <div class="page-heading">
+          <h1>Log In</h1>
+          <span class="subheading">Subheading!</span>
         </div>
       </div>
     </div>
   </div>
 </header>
 
-<!-- Post Content -->
-<article>
-  <div class="container px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
-        {{ post.body|safe }}
-     
-        {% if present_user.id == 1: %} <!-- only show if user is main author -->
-        
-        <div class="d-flex justify-content-end mb-4">
-          <a
-            class="btn btn-primary float-right"
-            href="{{url_for('edit_post', post_id=post.id)}}"
-            >Edit Post</a
-          >
-        </div>
-        {% endif %}
+<main class="mb-4">
+  <div class="container">
+    <div class="row">
+      <!-- Provide User Feedback (Use flash) -->
+       {% with message = get_flashed_messages() %}
+      {% if message %}
+      {% for message in messages %}
+      <p class="flash">{{ message }}</p>
+      {% endfor %}
+      {% endif %}.   <!-- End of our loops -->
+      {% endwith %}
+      
+      <div class="col-lg-8 col-md-10 mx-auto">
 
-        <!-- Comments Area -->
-        
-        {{ ckedtior.load() }} <!-- Now I'am adding CKEditor -->
-        {{ ckeditor.config(name='text_comment') }} <!-- Configure CKEditor -->
-        {{ render_form(form, novalidate=True, button_map={'submit': 'primary'} }} <!-- I have to create wtf form -->
-        <div class="comment">
-          <!-- Now I'm creating a loop to show all comments-->
-          {% for comment in post.comments: %} 
-          
-          <ul class="commentList">
-            <li>
-              <div class="commenterImage">
-                <img src="{{ comment.author_comment.email | avatars }}" />
-              </div>
-              <div class="commentText">
-                <p>{% comment.text|safe</p>
-                <span class="date sub-text">{% comment.author_comment.name %}</span>
-              </div>
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
+        {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
       </div>
     </div>
   </div>
-</article>
+</main>
 
-{% include "footer.html" %}
+{% include "footer.html" %} {% endblock %}
